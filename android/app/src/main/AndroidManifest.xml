@@ -2,7 +2,7 @@
     package="com.example.doctor_booking_app">
    <application
         android:label="doctor_booking_app"
-        android:name="${applicationName}"
+        android:name="Disease Prediction"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
