@@ -45,4 +45,12 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
+    <queries>
+        ... other intents
+        <!-- If your app sends emails -->
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
 </manifest>

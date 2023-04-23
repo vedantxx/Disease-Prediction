@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
@@ -22,6 +24,34 @@ class DoctorsInfo extends StatefulWidget {
 
 class _DoctorsInfoState extends State<DoctorsInfo> {
 
+  Future<void> _launchWhatsApp() async {
+
+    String wn = widget.phoneNumber!.substring(1);
+    late String appUrl;// phone number to send the message to
+    String message = 'Hi doc!,'; // message to send
+    if (Platform.isAndroid) {
+      appUrl = "whatsapp://send?phone=$wn&text=${Uri.parse(message)}"; // URL for Android devices
+    } else {
+      appUrl = "https://api.whatsapp.com/send?phone=$wn=${Uri.parse(message)}"; // URL for non-Android devices
+    }
+
+    // check if the URL can be launched
+    if (await canLaunchUrl(Uri.parse(appUrl))) {
+      // launch the URL
+      await launchUrl(Uri.parse(appUrl));
+    } else {
+      // throw an error if the URL cannot be launched
+      throw 'Could not launch $appUrl';
+    }
+
+    // // final Uri uri = Uri(
+    // //   scheme: 'app',
+    // //   path: 'https://wa.me/$wn?text=hi'
+    // // );
+    // final Uri uri = Uri.parse("https://api.whatsapp.com/send/?phone=(phone_number)");
+    // await launchUrl(uri);
+  }
+
   Future<void> _makePhoneCall() async {
     final Uri launchUri = Uri(
       scheme: 'tel',
@@ -31,8 +61,6 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
   }
 
   bool _hasCallSupport = false;
-  Future<void>? _launched;
-  String _phone = '';
 
   @override
   void initState() {
@@ -89,9 +117,14 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
                         ),
                         Row(
                           children: <Widget>[
-                            IconTile(
-                              backColor: Color(0xffFFECDD),
-                              imgAssetPath: "assets/email.png",
+                            GestureDetector(
+                              onTap: () {
+                                _launchWhatsApp();
+                              },
+                              child: IconTile(
+                                backColor: Color(0xffFFECDD),
+                                imgAssetPath: "assets/email.png",
+                              ),
                             ),
                             _hasCallSupport ?
                             GestureDetector(
