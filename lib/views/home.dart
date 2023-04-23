@@ -1,6 +1,7 @@
 import 'package:doctor_booking_app/data/data.dart';
 import 'package:doctor_booking_app/model/speciality.dart';
 import 'package:doctor_booking_app/views/doctor_info.dart';
+import 'package:doctor_booking_app/views/prediction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -124,11 +125,20 @@ class HomePageState extends State<HomePage> {
                     physics: ClampingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return SpecialistTile(
-                        imgAssetPath: specialities[index].imgAssetPath,
-                        speciality: specialities[index].speciality,
-                        // noOfDoctors: specialities[index].noOfDoctors,
-                        backColor: specialities[index].backgroundColor,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => PredictionScreen(
+                            coverImageAsset: specialities[index].imgAssetPath,
+                          ))
+                          );
+                        },
+                        child: SpecialistTile(
+                          imgAssetPath: specialities[index].imgAssetPath,
+                          speciality: specialities[index].speciality,
+                          // noOfDoctors: specialities[index].noOfDoctors,
+                          backColor: specialities[index].backgroundColor,
+                        ),
                       );
                     }),
               ),
