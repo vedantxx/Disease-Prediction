@@ -153,7 +153,8 @@ class HomePageState extends State<HomePage> {
                     imgAssetPath: doctorsList[index].imgAssetPath,
                     name: doctorsList[index].name,
                     speciality: doctorsList[index].speciality,
-
+                    address: doctorsList[index].address,
+                    phoneNumber:  doctorsList[index].phoneNumber,
                   ),
                 );
               })
@@ -256,12 +257,15 @@ class DoctorsTile extends StatelessWidget {
   final String? speciality;
   // final int? noOfDoctors;
   final String? name;
+  final String? address;
+  final String? phoneNumber;
 
   DoctorsTile(
       {required this.imgAssetPath,
         required this.speciality,
         // required this.noOfDoctors,
-        required this.name});
+        required this.name, this.address,
+        required this.phoneNumber});
 
 
   @override
@@ -269,7 +273,13 @@ class DoctorsTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DoctorsInfo()));
+            context, MaterialPageRoute(builder: (context) => DoctorsInfo(
+          name: name!,
+          speciality: speciality!,
+          imageAssetPath: imgAssetPath!,
+          address: address!,
+          phoneNumber: phoneNumber!,
+        )));
       },
       // child: ListView.builder(
       //   itemCount: 3,

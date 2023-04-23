@@ -38,13 +38,27 @@ List<SpecialityModel> getSpeciality() {
 
 List<DoctorsModel> getDoctorsList() {
   List<DoctorsModel> doctorsList = [];
+
   DoctorsModel doctorsModel = new DoctorsModel();
+
+  doctorsModel = new DoctorsModel();
+
+  doctorsModel.speciality = "Skin Cancer";
+  doctorsModel.imgAssetPath = "assets/doctor_images/doc2.png";
+  doctorsModel.name = "Dr. Nikita Mehta";
+  doctorsModel.phoneNumber = "+918779663918";
+  doctorsModel.address = "F-4, 1st Floor, Chandavarkar Rd, opposite Saraswat Bank, Krishna Nagar, Borivali West, Maharashtra, 400092";
+  doctorsList.add(doctorsModel);
+
+  doctorsModel = new DoctorsModel();
 
   //1
   // specialityModel.noOfDoctors = 10;
   doctorsModel.speciality = "Pneumonia/Chest pain";
   doctorsModel.imgAssetPath = "assets/doctor_images/doc4.png";
   doctorsModel.name = "Dr Avya Bansal";
+  doctorsModel.phoneNumber = "+919503554081";
+  doctorsModel.address = "Flat No. 1, Ground Floor, Lung Care Clinic, Om-Jai Priyadarshini CHS Ltd, 12th Rd, Khar, Khar West, Mumbai, Maharashtra, 400052";
   doctorsList.add(doctorsModel);
 
   doctorsModel = new DoctorsModel();
@@ -54,6 +68,8 @@ List<DoctorsModel> getDoctorsList() {
   doctorsModel.speciality = "Malaria Specialist";
   doctorsModel.imgAssetPath = "assets/doctor_images/doc1.png";
   doctorsModel.name = "Dr Sallah Qureshi ";
+  doctorsModel.phoneNumber = "+919892200831";
+  doctorsModel.address = "Qure Clinic, Sai Apartments, Shop No 2, Seven Bungalows, Andheri West, Mumbai - 400053 (Bon Bon Lane, Juhu Versova, Link Road)";
   doctorsList.add(doctorsModel);
 
   doctorsModel = new DoctorsModel();
@@ -63,14 +79,11 @@ List<DoctorsModel> getDoctorsList() {
   doctorsModel.speciality = "Breast Cancer";
   doctorsModel.imgAssetPath = "assets/doctor_images/doc3.png";
   doctorsModel.name = "Dr Shravan Shetty";
+  doctorsModel.phoneNumber = "+919082105405";
+  doctorsModel.address = "A-103, Rahul Apartments, Opposite Shoppers Stop, above State Bank of India, off Swami Vivekananda Road, Andheri West, Mumbai, Maharashtra 400058";
   doctorsList.add(doctorsModel);
 
   doctorsModel = new DoctorsModel();
-
-  doctorsModel.speciality = "Skin Cancer";
-  doctorsModel.imgAssetPath = "assets/doctor_images/doc2.png";
-  doctorsModel.name = "Dr. Nikita Mehta";
-  doctorsList.add(doctorsModel);
 
   return doctorsList;
 }

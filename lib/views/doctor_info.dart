@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart';
 
 class DoctorsInfo extends StatefulWidget {
+  final String? name;
+  final String? speciality;
+  final String? imageAssetPath;
+  final String? address;
+  final String? phoneNumber;
+
+  const DoctorsInfo({Key? key,
+    required this.name,
+    required this.speciality,
+    required this.imageAssetPath,
+    required this.address,
+    required this.phoneNumber}) : super(key: key);
   @override
   _DoctorsInfoState createState() => _DoctorsInfoState();
 }
 
 class _DoctorsInfoState extends State<DoctorsInfo> {
+
+  Future<void> _makePhoneCall() async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: widget.phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  bool _hasCallSupport = false;
+  Future<void>? _launched;
+  String _phone = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for phone call support.
+    canLaunchUrl(Uri(scheme: 'tel', path: widget.phoneNumber)).then((bool result) {
+      setState(() {
+        _hasCallSupport = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +65,7 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Image.asset("assets/doctor_pic2.png", height: 220),
+                  Image.asset(widget.imageAssetPath!, height: 220,width: 140,),
                   SizedBox(
                     width: 20,
                   ),
@@ -39,11 +77,11 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Dr. Stefeni Albert",
+                          widget.name!,
                           style: TextStyle(fontSize: 32),
                         ),
                         Text(
-                          "Heart Speailist",
+                          widget.speciality!,
                           style: TextStyle(fontSize: 19, color: Colors.grey),
                         ),
                         SizedBox(
@@ -55,14 +93,22 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
                               backColor: Color(0xffFFECDD),
                               imgAssetPath: "assets/email.png",
                             ),
-                            IconTile(
-                              backColor: Color(0xffFEF2F0),
-                              imgAssetPath: "assets/call.png",
-                            ),
-                            IconTile(
-                              backColor: Color(0xffEBECEF),
-                              imgAssetPath: "assets/video_call.png",
-                            ),
+                            _hasCallSupport ?
+                            GestureDetector(
+                              onTap: () {
+                                // UrlLauncher.launchUrl("tel://21213123123")
+                                _makePhoneCall();
+                              },
+                              child: IconTile(
+                                backColor: Color(0xffFEF2F0),
+                                imgAssetPath: "assets/call.png",
+                              ),
+                            )
+                                : Container(),
+                            // IconTile(
+                            //   backColor: Color(0xffEBECEF),
+                            //   imgAssetPath: "assets/video_call.png",
+                            // ),
                           ],
                         )
                       ],
@@ -81,7 +127,7 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
                 height: 16,
               ),
               Text(
-                "Dr. Stefeni Albert is a cardiologist in Nashville & affiliated with multiple hospitals in the  area.He received his medical degree from Duke University School of Medicine and has been in practice for more than 20 years. ",
+                "${widget.name} is a ${widget.speciality} doctor in Mumbai & affiliated with multiple hospitals in the area and received their medical degree from Duke University School of Medicine and has been in practice for more than 10 years. ",
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               SizedBox(
@@ -113,7 +159,7 @@ class _DoctorsInfoState extends State<DoctorsInfo> {
                                   width:
                                       MediaQuery.of(context).size.width - 268,
                                   child: Text(
-                                    "House # 2, Road # 5, Carter Road, Mumbai, India",
+                                    widget.address!,
                                     style: TextStyle(color: Colors.grey),
                                   ))
                             ],
@@ -161,85 +207,85 @@ Open till 7 Pm''',
                   )
                 ],
               ),
-              Text(
-                "Activity",
-                style: TextStyle(
-                    color: Color(0xff242424),
-                    fontSize: 28,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 22,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      decoration: BoxDecoration(
-                          color: Color(0xffFBB97C),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Color(0xffFCCA9B),
-                                  borderRadius: BorderRadius.circular(16)),
-                              child: Image.asset("assets/list.png")),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2 - 130,
-                            child: Text(
-                              "Doc's Schedule",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      decoration: BoxDecoration(
-                          color: Color(0xffA5A5A5),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Color(0xffBBBBBB),
-                                  borderRadius: BorderRadius.circular(16)),
-                              child: Image.asset("assets/list.png")),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width / 2 - 130,
-                            child: Text(
-                              "Doctor's Daily Post",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Text(
+              //   "Activity",
+              //   style: TextStyle(
+              //       color: Color(0xff242424),
+              //       fontSize: 28,
+              //       fontWeight: FontWeight.w600),
+              // ),
+              // SizedBox(
+              //   height: 22,
+              // ),
+              // Row(
+              //   children: <Widget>[
+              //     Expanded(
+              //       child: Container(
+              //         padding:
+              //             EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              //         decoration: BoxDecoration(
+              //             color: Color(0xffFBB97C),
+              //             borderRadius: BorderRadius.circular(20)),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: <Widget>[
+              //             Container(
+              //                 padding: EdgeInsets.all(8),
+              //                 decoration: BoxDecoration(
+              //                     color: Color(0xffFCCA9B),
+              //                     borderRadius: BorderRadius.circular(16)),
+              //                 child: Image.asset("assets/list.png")),
+              //             SizedBox(
+              //               width: 16,
+              //             ),
+              //             Container(
+              //               width: MediaQuery.of(context).size.width / 2 - 130,
+              //               child: Text(
+              //                 "Doc's Schedule",
+              //                 style:
+              //                     TextStyle(color: Colors.white, fontSize: 16),
+              //               ),
+              //             )
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //     SizedBox(
+              //       width: 16,
+              //     ),
+              //     Expanded(
+              //       child: Container(
+              //         padding:
+              //             EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              //         decoration: BoxDecoration(
+              //             color: Color(0xffA5A5A5),
+              //             borderRadius: BorderRadius.circular(20)),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: <Widget>[
+              //             Container(
+              //                 padding: EdgeInsets.all(8),
+              //                 decoration: BoxDecoration(
+              //                     color: Color(0xffBBBBBB),
+              //                     borderRadius: BorderRadius.circular(16)),
+              //                 child: Image.asset("assets/list.png")),
+              //             SizedBox(
+              //               width: 16,
+              //             ),
+              //             Container(
+              //               width: MediaQuery.of(context).size.width / 2 - 130,
+              //               child: Text(
+              //                 "Doctor's Daily Post",
+              //                 style:
+              //                     TextStyle(color: Colors.white, fontSize: 16),
+              //               ),
+              //             )
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               SizedBox(
                 height: 60,
               ),
