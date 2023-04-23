@@ -4,6 +4,8 @@ import 'package:doctor_booking_app/views/doctor_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../model/doctors_model.dart';
+
 String? selectedCategorie = "Adults";
 
 class HomePage extends StatefulWidget {
@@ -15,12 +17,14 @@ class HomePageState extends State<HomePage> {
   List<String> categories = ["Adults", "Childrens", "Womens", "Mens"];
 
   late List<SpecialityModel> specialities;
+  late List<DoctorsModel> doctorsList;
 
   @override
   void initState() {
     super.initState();
 
     specialities = getSpeciality();
+    doctorsList = getDoctorsList();
   }
 
   @override
@@ -136,7 +140,24 @@ class HomePageState extends State<HomePage> {
               SizedBox(
                 height: 20,
               ),
-              DoctorsTile(),
+              // DoctorsTile(),
+              Container(
+                height: 400,
+                  child: ListView.builder(
+                    itemCount: 4,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DoctorsTile(
+                    imgAssetPath: doctorsList[index].imgAssetPath,
+                    name: doctorsList[index].name,
+                    speciality: doctorsList[index].speciality,
+
+                  ),
+                );
+              })
+              ),
               SizedBox(
                 height: 60,
               ),
@@ -231,6 +252,18 @@ class SpecialistTile extends StatelessWidget {
 }
 
 class DoctorsTile extends StatelessWidget {
+  final String? imgAssetPath;
+  final String? speciality;
+  // final int? noOfDoctors;
+  final String? name;
+
+  DoctorsTile(
+      {required this.imgAssetPath,
+        required this.speciality,
+        // required this.noOfDoctors,
+        required this.name});
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -238,52 +271,58 @@ class DoctorsTile extends StatelessWidget {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => DoctorsInfo()));
       },
-      child: Container(
-        decoration: BoxDecoration(
-            color: Color(0xffFFEEE0), borderRadius: BorderRadius.circular(20)),
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-        child: Row(
-          children: <Widget>[
-            Image.asset(
-              "assets/doctor_pic.png",
-              height: 50,
-            ),
-            SizedBox(
-              width: 17,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Dr. Stefeni Albert",
-                  style: TextStyle(color: Color(0xffFC9535), fontSize: 19),
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Text(
-                  "Cancer Speailist",
-                  style: TextStyle(fontSize: 15),
-                )
-              ],
-            ),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
-              decoration: BoxDecoration(
-                  color: Color(0xffFBB97C),
-                  borderRadius: BorderRadius.circular(13)),
-              child: Text(
-                "Call",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500),
+      // child: ListView.builder(
+      //   itemCount: 3,
+      //   itemBuilder: (BuildContext context, int index) {
+      //     return ;
+      //   },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Color(0xffFFEEE0), borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          child: Row(
+            children: <Widget>[
+              Image.asset(
+                imgAssetPath!,
+                height: 50,
               ),
-            )
-          ],
+              SizedBox(
+                width: 17,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    name!,
+                    style: TextStyle(color: Color(0xffFC9535), fontSize: 19),
+                  ),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    speciality!,
+                    style: TextStyle(fontSize: 15),
+                  )
+                ],
+              ),
+              Spacer(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+                decoration: BoxDecoration(
+                    color: Color(0xffFBB97C),
+                    borderRadius: BorderRadius.circular(13)),
+                child: Text(
+                  "Call",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500),
+                ),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
   }
 }
