@@ -3,6 +3,7 @@ import 'package:doctor_booking_app/model/speciality.dart';
 import 'package:doctor_booking_app/views/doctor_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/doctors_model.dart';
 
@@ -19,12 +20,16 @@ class HomePageState extends State<HomePage> {
   late List<SpecialityModel> specialities;
   late List<DoctorsModel> doctorsList;
 
+
+
+
   @override
   void initState() {
     super.initState();
 
     specialities = getSpeciality();
     doctorsList = getDoctorsList();
+
   }
 
   @override
@@ -49,7 +54,7 @@ class HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(
-                height: 10,
+                height: 2,
               ),
               Text(
                 "Find Your \nConsultation",
@@ -58,28 +63,28 @@ class HomePageState extends State<HomePage> {
                     fontSize: 30,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                height: 40,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                height: 50,
-                decoration: BoxDecoration(
-                    color: Color(0xffEFEFEF),
-                    borderRadius: BorderRadius.circular(14)),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.search),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Search",
-                      style: TextStyle(color: Colors.grey, fontSize: 19),
-                    )
-                  ],
-                ),
-              ),
+              // SizedBox(
+              //   height: 40,
+              // ),
+              // Container(
+              //   padding: EdgeInsets.symmetric(horizontal: 24),
+              //   height: 50,
+              //   decoration: BoxDecoration(
+              //       color: Color(0xffEFEFEF),
+              //       borderRadius: BorderRadius.circular(14)),
+              //   child: Row(
+              //     children: <Widget>[
+              //       Icon(Icons.search),
+              //       SizedBox(
+              //         width: 10,
+              //       ),
+              //       Text(
+              //         "Search",
+              //         style: TextStyle(color: Colors.grey, fontSize: 19),
+              //       )
+              //     ],
+              //   ),
+              // ),
               SizedBox(
                 height: 30,
               ),
@@ -90,24 +95,24 @@ class HomePageState extends State<HomePage> {
                     fontSize: 25,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 30,
-                child: ListView.builder(
-                    itemCount: categories.length,
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return CategorieTile(
-                        categorie: categories[index],
-                        isSelected: selectedCategorie == categories[index],
-                        context: this,
-                      );
-                    }),
-              ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              // Container(
+              //   height: 30,
+              //   child: ListView.builder(
+              //       itemCount: categories.length,
+              //       shrinkWrap: true,
+              //       physics: ClampingScrollPhysics(),
+              //       scrollDirection: Axis.horizontal,
+              //       itemBuilder: (context, index) {
+              //         return CategorieTile(
+              //           categorie: categories[index],
+              //           isSelected: selectedCategorie == categories[index],
+              //           context: this,
+              //         );
+              //       }),
+              // ),
               SizedBox(
                 height: 20,
               ),
@@ -252,7 +257,7 @@ class SpecialistTile extends StatelessWidget {
   }
 }
 
-class DoctorsTile extends StatelessWidget {
+class DoctorsTile extends StatefulWidget {
   final String? imgAssetPath;
   final String? speciality;
   // final int? noOfDoctors;
@@ -267,72 +272,97 @@ class DoctorsTile extends StatelessWidget {
         required this.name, this.address,
         required this.phoneNumber});
 
+  @override
+  State<DoctorsTile> createState() => _DoctorsTileState();
+}
+
+class _DoctorsTileState extends State<DoctorsTile> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    canLaunchUrl(Uri(scheme: 'tel', path: phoneNumber)).then((bool result) {
+      setState(() {
+        _hasCallSupport = result;
+      });
+    });
+    if(_hasCallSupport) {
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: phoneNumber,
+      );
+      await launchUrl(launchUri);
+    }
+  }
+
+  bool _hasCallSupport = false;
+
+  Future<void>? _launched;
+
+  String _phone = '';
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DoctorsInfo(
-          name: name!,
-          speciality: speciality!,
-          imageAssetPath: imgAssetPath!,
-          address: address!,
-          phoneNumber: phoneNumber!,
-        )));
-      },
-      // child: ListView.builder(
-      //   itemCount: 3,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     return ;
-      //   },
-        child: Container(
-          decoration: BoxDecoration(
-              color: Color(0xffFFEEE0), borderRadius: BorderRadius.circular(20)),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-          child: Row(
-            children: <Widget>[
-              Image.asset(
-                imgAssetPath!,
-                height: 50,
-              ),
-              SizedBox(
-                width: 17,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    name!,
-                    style: TextStyle(color: Color(0xffFC9535), fontSize: 19),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    speciality!,
-                    style: TextStyle(fontSize: 15),
-                  )
-                ],
-              ),
-              Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
-                decoration: BoxDecoration(
-                    color: Color(0xffFBB97C),
-                    borderRadius: BorderRadius.circular(13)),
-                child: Text(
-                  "Call",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500),
-                ),
-              )
-            ],
+    return Container(
+      decoration: BoxDecoration(
+          color: Color(0xffFFEEE0), borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      child: Row(
+        children: <Widget>[
+          Image.asset(
+            widget.imgAssetPath!,
+            height: 50,
           ),
-        ),
-      );
+          SizedBox(
+            width: 17,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => DoctorsInfo(
+                name: widget.name!,
+                speciality: widget.speciality!,
+                imageAssetPath: widget.imgAssetPath!,
+                address: widget.address!,
+                phoneNumber: widget.phoneNumber!,
+              )));
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  widget.name!,
+                  style: TextStyle(color: Color(0xffFC9535), fontSize: 19),
+                ),
+                SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  widget.speciality!,
+                  style: TextStyle(fontSize: 15),
+                )
+              ],
+            ),
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              _makePhoneCall(widget.phoneNumber!);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+              decoration: BoxDecoration(
+                  color: Color(0xffFBB97C),
+                  borderRadius: BorderRadius.circular(13)),
+              child: Text(
+                "Call",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
 
   }
 }
