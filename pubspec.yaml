@@ -47,6 +47,9 @@ flutter:
   assets:
      - assets/
      - assets/doctor_images/
+     - assets/ml_models/breast_cancer/
+     - assets/ml_models/malaria/
+     - assets/ml_models/pneumonia/
      - assets/ml_models/skin_cancer/
   #  - images/a_dot_ham.jpeg
 

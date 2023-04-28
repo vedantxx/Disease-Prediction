@@ -6,7 +6,8 @@ import 'package:tflite/tflite.dart';
 
 class PredictionScreen extends StatefulWidget {
   final String? coverImageAsset;
-  const PredictionScreen({Key? key,required this.coverImageAsset}) : super(key: key);
+  final String? disease;
+  const PredictionScreen({Key? key,required this.coverImageAsset,required this.disease}) : super(key: key);
 
   @override
   _PredictionScreenState createState() => _PredictionScreenState();
@@ -37,8 +38,8 @@ class _PredictionScreenState extends State<PredictionScreen> {
 
   loadMyModel() async {
     var resultant = await Tflite.loadModel(
-      model: "assets/ml_models/skin_cancer/model_unquant.tflite",
-      labels: "assets/ml_models/skin_cancer/labels.txt",
+      model: "assets/ml_models/${widget.disease}/model_unquant.tflite",
+      labels: "assets/ml_models/${widget.disease}/labels.txt",
     );
 
     debugPrint("Model loaded successfully $resultant");
@@ -104,6 +105,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 200,),
                   isImageLoaded ? Center(
@@ -162,19 +164,45 @@ class _PredictionScreenState extends State<PredictionScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20,),
-                  Center(child: Text("Report: ")),
-                  isPredicted ? Text("Result : $_name \nConfidence : $_confidence %") : Container(),
+                  const SizedBox(height: 24,),
+                  Center(child: Text("Report: ",style: TextStyle(
+                    fontSize: 32,
+                  ),)),
+                  const SizedBox(height: 24,),
+                  isPredicted ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      // margin: const EdgeInsets.symmetric(horizontal: 40.0),
+                      color: Colors.transparent.withOpacity(0.2),
+                      child: Text("Result : $_name \nConfidence : $_confidence %",
+                        style: TextStyle(
+                          fontSize: 24
+                        ),
+                      ),
+                    ),
+                  ) : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.transparent.withOpacity(0.2),
+                      child: Text("Result :\nConfidence :  %",
+                        style: TextStyle(
+                            fontSize: 24
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
 
             Container(
-        width: 150,
+        width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.only(right: 16),
-        padding: EdgeInsets.only(top: 16, right: 16, left: 16),
+        padding: EdgeInsets.only(top: 16,  left: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             SizedBox(
               height: 600,

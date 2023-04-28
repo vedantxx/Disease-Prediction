@@ -130,6 +130,7 @@ class HomePageState extends State<HomePage> {
                           Navigator.push(
                               context, MaterialPageRoute(builder: (context) => PredictionScreen(
                             coverImageAsset: specialities[index].imgAssetPath,
+                            disease: specialities[index].disease,
                           ))
                           );
                         },
@@ -259,7 +260,7 @@ class SpecialistTile extends StatelessWidget {
           Image.asset(
             imgAssetPath!,
             height: 159,
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.fill,
           )
         ],
       ),
